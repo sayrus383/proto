@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package ofd.proto;
 
@@ -11,11 +11,11 @@ enum TicketAdTypeEnum {
 }
 
 message TicketAdInfo {
-  required TicketAdTypeEnum type = 1;
-  required uint64 version = 2;
+  TicketAdTypeEnum type = 1;
+  uint64 version = 2;
 }
 
 message TicketAd {
-  required TicketAdInfo info = 1;
-  required string text = 2;
+  TicketAdInfo info = 1;
+  string text = 2;
 }

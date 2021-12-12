@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 import "common.proto";
 import "taxation.proto";
@@ -6,7 +6,7 @@ import "taxation.proto";
 package ofd.proto;
 
 message NomenclatureRequest {
-  required uint32 current_version = 1;
+  uint32 current_version = 1;
 }
 
 message NomenclatureResponse {
@@ -16,34 +16,60 @@ message NomenclatureResponse {
   }
   
   message Tax {
-    required TaxationTypeEnum taxation_type = 1;
-    required TaxTypeEnum tax_type      = 2;
-    required uint32 tax_percent   = 3;
+    TaxationTypeEnum taxation_type = 1;
+    TaxTypeEnum tax_type      = 2;
+    uint32 tax_percent   = 3;
   }
   
   message Item  {
-    optional string article = 1;
-    optional string barcode = 2;
-    optional string description = 3;
-    required Money purchase_price = 6;
-    required Money sell_price = 7;
-    optional uint32 discount_percent = 8;
-    optional Money discount_sum = 9;
-    optional uint32 markup_percent = 10;
-    optional Money markup_sum = 11;
+    oneof article_oneof {
+      string article = 1;
+    }
+    oneof barcode_oneof {
+      string barcode = 2;
+    }
+    oneof description_oneof {
+      string description = 3;
+    }
+    Money purchase_price = 6;
+    Money sell_price = 7;
+    oneof discount_percent_oneof {
+      uint32 discount_percent = 8;
+    }
+    oneof discount_sum_oneof {
+      Money discount_sum = 9;
+    }
+    oneof markup_percent_oneof {
+      uint32 markup_percent = 10;
+    }
+    oneof markup_sum_oneof {
+      Money markup_sum = 11;
+    }
     repeated Tax taxes = 12;
-    optional uint32 measure_count = 13;
-    optional string measure_title = 14;
-    optional bool measure_fractional = 15;
-    optional string measure_unit_code = 16; // добавлено в версии 201
+    oneof measure_count_oneof {
+      uint32 measure_count = 13;
+    }
+    oneof measure_title_oneof {
+      string measure_title = 14;
+    }
+    oneof measure_fractional_oneof {
+      bool measure_fractional = 15;
+    }
+    oneof measure_unit_code_oneof {
+      string measure_unit_code = 16; // добавлено в версии 201
+    }
   }
 
   message Element {
-    required ElementTypeEnum type = 1;
-    required string title = 3;
-    optional uint64 parent_group_id = 4;
-    required uint64 id = 5;
-    optional Item item = 6; // required при type == ITEM
+    ElementTypeEnum type = 1;
+    string title = 3;
+    oneof parent_group_id_oneof {
+      uint64 parent_group_id = 4;
+    }
+    uint64 id = 5;
+    oneof item_oneof {
+      Item item = 6; // required при type == ITEM
+    }
   }
 
   enum NomenclatureResultTypeEnum {
@@ -52,8 +78,10 @@ message NomenclatureResponse {
     RESULT_TYPE_NO_VERSION = 2;
   }
 
-  required uint32 version = 1;
-  optional DateTime created_time = 2;
+  uint32 version = 1;
+  oneof created_time_oneof {
+    DateTime created_time = 2;
+  }
   repeated Element elements = 3; // список Element от 0 до n
-  required NomenclatureResultTypeEnum result = 4;
+  NomenclatureResultTypeEnum result = 4;
 }

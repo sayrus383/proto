@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 import "ticket.proto";
 import "placement.proto";
@@ -46,27 +46,53 @@ enum ResultTypeEnum {
 }
 
 message Result {
-  required uint32 result_code = 1; // число из диапазона ResultTypeEnum
-  optional string result_text = 2;
+  uint32 result_code = 1; // число из диапазона ResultTypeEnum
+  oneof result_text_oneof {
+    string result_text = 2;
+  }
 }
 
 message Request {
-  required CommandTypeEnum command = 1;
-  optional TicketRequest ticket = 2; // required при command == COMMAND_TICKET
-  optional CloseShiftRequest close_shift = 3; // required при command == COMMAND_CLOSE_SHIFT
-  optional ReportRequest report = 4; // required при command == COMMAND_REPORT
-  optional NomenclatureRequest nomenclature = 5; // required при command == COMMAND_NOMENCLATURE
-  optional ServiceRequest service = 6; // required с версии 125 при command == COMMAND_CLOSE_SHIFT || command == COMMAND_REPORT
-  optional MoneyPlacementRequest money_placement = 7; // required при command == COMMAND_MONEY_PLACEMENT
-  optional AuthRequest auth = 8; // required при command == COMMAND_AUTH
+  CommandTypeEnum command = 1;
+  oneof ticket_oneof {
+    TicketRequest ticket = 2; // required при command == COMMAND_TICKET
+  }
+  oneof close_shift_oneof {
+    CloseShiftRequest close_shift = 3; // required при command == COMMAND_CLOSE_SHIFT
+  }
+  oneof report_oneof {
+    ReportRequest report = 4; // required при command == COMMAND_REPORT
+  }
+  oneof nomenclature_oneof {
+    NomenclatureRequest nomenclature = 5; // required при command == COMMAND_NOMENCLATURE
+  }
+  oneof service_oneof {
+    ServiceRequest service = 6; // required с версии 125 при command == COMMAND_CLOSE_SHIFT || command == COMMAND_REPORT
+  }
+  oneof money_placement_oneof {
+    MoneyPlacementRequest money_placement = 7; // required при command == COMMAND_MONEY_PLACEMENT
+  }
+  oneof auth_oneof {
+    AuthRequest auth = 8; // required при command == COMMAND_AUTH
+  }
 }
 
 message Response {
-  required CommandTypeEnum command = 1;
-  required Result result = 2;
-  optional TicketResponse ticket = 3; // required при command == COMMAND_TICKET
-  optional ReportResponse report = 4; // required при command == COMMAND_CLOSE_SHIFT || command == COMMAND_REPORT || command == COMMAND_INFO
-  optional NomenclatureResponse nomenclature = 5; // required при command == COMMAND_NOMENCLATURE
-  optional ServiceResponse service = 6; // required при command == COMMAND_INFO
-  optional AuthResponse auth = 7; // required при command == COMMAND_AUTH
+  CommandTypeEnum command = 1;
+  Result result = 2;
+  oneof ticket_oneof {
+    TicketResponse ticket = 3; // required при command == COMMAND_TICKET
+  }
+  oneof report_oneof {
+    ReportResponse report = 4; // required при command == COMMAND_CLOSE_SHIFT || command == COMMAND_REPORT || command == COMMAND_INFO
+  }
+  oneof nomenclature_oneof {
+    NomenclatureResponse nomenclature = 5; // required при command == COMMAND_NOMENCLATURE
+  }
+  oneof service_oneof {
+    ServiceResponse service = 6; // required при command == COMMAND_INFO
+  }
+  oneof auth_oneof {
+    AuthResponse auth = 7; // required при command == COMMAND_AUTH
+  }
 }
