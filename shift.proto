@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 import "common.proto";
 import "report.proto";
@@ -7,11 +7,19 @@ import "ticket.proto";
 package ofd.proto;
 
 message CloseShiftRequest {
-  required DateTime close_time = 1;
-  optional bool is_offline = 2;
-  optional uint32 fr_shift_number = 3;
-  optional bool withdraw_money = 4;
-  required ZXReport z_report = 5; // required с версии 200
-  required Operator operator = 6; // required с версии 200
-  optional uint64 printed_document_number = 7; // добавлено в версии 200
+  DateTime close_time = 1;
+  oneof is_offline_oneof {
+    bool is_offline = 2;
+  }
+  oneof fr_shift_number_oneof {
+    uint32 fr_shift_number = 3;
+  }
+  oneof withdraw_money_oneof {
+    bool withdraw_money = 4;
+  }
+  ZXReport z_report = 5; // required с версии 200
+  Operator operator = 6; // required с версии 200
+  oneof printed_document_number_oneof {
+    uint64 printed_document_number = 7; // добавлено в версии 200
+  }
 }

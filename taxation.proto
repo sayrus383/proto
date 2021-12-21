@@ -1,13 +1,13 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package ofd.proto;
 
 enum TaxTypeEnum {
-  VAT = 100;
+  VAT = 0; // 1enum 100
 }
 
 enum TaxationTypeEnum {
-  STS = 100;
+  STS = 0; // 1enum 100
   RTS = 101;
   TRFF = 102;
   TRBP = 103;
@@ -15,10 +15,10 @@ enum TaxationTypeEnum {
 
 message BindedTaxation {
   message BindedTax {
-    required TaxTypeEnum type  = 1;
-    required uint32 percent = 2;
+    TaxTypeEnum type  = 1;
+    uint32 percent = 2;
   }
 
-  required TaxationTypeEnum type  = 1;
+  TaxationTypeEnum type  = 1;
   repeated BindedTax taxes = 2;
 }

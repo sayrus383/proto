@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 import "common.proto";
 
@@ -10,11 +10,17 @@ enum MoneyPlacementEnum {
 }
 
 message MoneyPlacementRequest {
-  required DateTime datetime = 1;
-  required MoneyPlacementEnum operation = 2;
-  required Money sum = 3;
-  optional bool is_offline = 4;
-  optional uint32 fr_shift_number = 5;
-  optional uint64 printed_document_number = 6; // добавлено в версии 200
-  required Operator operator = 7; // добавлено в версии 202
+  DateTime datetime = 1;
+  MoneyPlacementEnum operation = 2;
+  Money sum = 3;
+  oneof is_offline_oneof {
+    bool is_offline = 4;
+  }
+  oneof fr_shift_number_oneof {
+    uint32 fr_shift_number = 5;
+  }
+  oneof printed_document_number_oneof {
+    uint64 printed_document_number = 6; // добавлено в версии 200
+  }
+  Operator operator = 7; // добавлено в версии 202
 }
